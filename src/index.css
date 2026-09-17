@@ -35,6 +35,9 @@
 }
 
 html {
+  /* canvas colour: iOS Safari paints it above the page (status bar area, pull-down overscroll).
+     body keeps the white page background, so this only shows outside the page edges. */
+  background: var(--blue);
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
