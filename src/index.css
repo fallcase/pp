@@ -35,8 +35,7 @@
 }
 
 html {
-  /* canvas colour: iOS Safari paints it above the page (status bar area, pull-down overscroll).
-     body keeps the white page background, so this only shows outside the page edges. */
+  /* canvas colour: pull-down overscroll above the hero */
   background: var(--blue);
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
@@ -87,9 +86,10 @@ html {
   }
 }
 
+/* iOS 26 Safari tints the status bar from body's background, so body is blue and main carries the white */
 body {
   margin: 0;
-  background: var(--white);
+  background: var(--blue);
   color: var(--ink);
   font: 400 1.0625rem/1.6 var(--body);
   -webkit-font-smoothing: antialiased;
@@ -845,6 +845,10 @@ h1 {
 
 /* ---------- sections ---------- */
 
+main {
+  background: var(--white);
+}
+
 main > section {
   padding: clamp(56px, 7vw, 88px) max(var(--gutter), calc((100% - var(--max)) / 2));
 }
@@ -1495,7 +1499,7 @@ details p {
   }
 
   .cta-row .btn-icon {
-    flex: 0 0 auto;
+    flex: 1 1 100%;
   }
 
   .cards {
