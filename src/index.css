@@ -1472,6 +1472,12 @@ details p {
 }
 
 @media (max-width: 520px) {
+  /* the two Telegram CTAs don't fit side by side: stack them full width instead of ragged */
+  .social-row a {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+
   .price-card {
     padding: 14px;
   }
