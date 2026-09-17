@@ -9,9 +9,12 @@ const LINKS = {
 }
 const social = { target: '_blank', rel: 'noreferrer' }
 
-const buyUrl = CA ? `https://jup.ag/swap/SOL-${CA}` : '#how-to-buy'
+const SOL = 'So11111111111111111111111111111111111111112'
+// jup.ag ignores the old /swap/SOL-<mint> path and opens SOL/USDC: the pair lives in the query string
+const jupUrl = (sell: string, buy: string) => `https://jup.ag/swap?sell=${sell}&buy=${buy}`
+const buyUrl = CA ? jupUrl(SOL, CA) : '#how-to-buy'
 const pumpUrl = CA ? `https://pump.fun/coin/${CA}` : 'https://pump.fun'
-const sellUrl = CA ? `https://jup.ag/swap/${CA}-SOL` : '#how-to-buy'
+const sellUrl = CA ? jupUrl(CA, SOL) : '#how-to-buy'
 const external = CA ? { target: '_blank', rel: 'noreferrer' } : {}
 
 const TOKENOMICS = [
@@ -88,7 +91,11 @@ function ContractBar() {
   return (
     <div className="ca">
       <span className="ca-label">Contract</span>
-      <code className="ca-value">{CA || 'Posts here at launch'}</code>
+      <code className="ca-value">
+        {/* the bar shows whichever of the two fits: CSS picks by container width */}
+        <span className="ca-full">{CA || 'Posts here at launch'}</span>
+        {CA && <span className="ca-short">{`${CA.slice(0, 8)}…${CA.slice(-6)}`}</span>}
+      </code>
       <button className="ca-copy" onClick={copy} disabled={!CA} aria-live="polite">
         {copied ? 'Copied' : 'Copy'}
       </button>

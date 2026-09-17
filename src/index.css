@@ -442,6 +442,8 @@ h1 {
 
 .ca {
   display: flex;
+  container-type: inline-size;
+  --ca-chrome: 13.5rem; /* label + copy button + padding; the address gets what is left */
   align-items: stretch;
   max-width: 560px;
   background: var(--white);
@@ -469,7 +471,31 @@ h1 {
   min-width: 0;
   padding: 15px 14px;
   font: inherit;
-  overflow-wrap: anywhere;
+  /* one line at any width: shrink the type, and below --ca-fits show the shortened address */
+  font-size: max(0.6875rem, min(0.875rem, calc((100cqi - var(--ca-chrome)) / 27))); /* 44 base58 chars at ~0.6em each */
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: center; /* the shortened address sits in the middle of the bar, not against the edge */
+}
+
+.ca-full {
+  display: none;
+}
+
+/* no short form to fall back to (before launch, when the bar holds a message) */
+.ca-full:only-child {
+  display: inline;
+}
+
+/* wide enough for all 44 characters at a readable size */
+@container (min-width: 520px) {
+  .ca-full {
+    display: inline;
+  }
+
+  .ca-short {
+    display: none;
+  }
 }
 
 .ca-copy {
@@ -1517,6 +1543,10 @@ details p {
 
   .ca-label {
     display: none;
+  }
+
+  .ca {
+    --ca-chrome: 7rem;
   }
 }
 
