@@ -180,6 +180,11 @@ h2 {
   justify-content: center;
 }
 
+/* text shows only on mobile, where the button goes full width */
+.btn-icon .btn-label {
+  display: none;
+}
+
 .btn-icon img {
   width: 2rem;
   height: 2rem;
@@ -1500,6 +1505,10 @@ details p {
 
   .cta-row .btn-icon {
     flex: 1 1 100%;
+  }
+
+  .cta-row .btn-icon .btn-label {
+    display: inline;
   }
 
   .cards {

@@ -272,6 +272,7 @@ export default function App() {
               <a className="btn btn-white" href="#chart">View chart</a>
               <a className="btn btn-white btn-icon" href={pumpUrl} target="_blank" rel="noreferrer" aria-label="Open on pump.fun" title="pump.fun">
                 <img src="/pumpfun.png" alt="" width="128" height="128" />
+                <span className="btn-label">Open on pump.fun</span>
               </a>
             </div>
             <div className="social-row">
