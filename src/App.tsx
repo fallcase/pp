@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import Chart, { MarketStats, PriceCard } from './Chart.tsx'
 
-// Paste the contract address here at launch. Buy and chart links derive from it.
-const CA = ''
+// Live contract address. Buy, chart and pump.fun links derive from it.
+const CA = 'QZ7MyN1SFbrK9oFiq7xpdYdx5HT2mndryF2NYJopump'
 const LINKS = {
   telegram: 'https://t.me/PutinPumpToken', // channel: announcements
   telegramChat: 'https://t.me/PutinPumpChat', // group: community chat
@@ -12,9 +12,6 @@ const social = { target: '_blank', rel: 'noreferrer' }
 const buyUrl = CA ? `https://jup.ag/swap/SOL-${CA}` : '#how-to-buy'
 const pumpUrl = CA ? `https://pump.fun/coin/${CA}` : 'https://pump.fun'
 const sellUrl = CA ? `https://jup.ag/swap/${CA}-SOL` : '#how-to-buy'
-// Until CA is set, the chart section runs on this token so the chart can be tested (BONK). Set to '' to show the placeholder instead.
-const TEST_TOKEN = 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263'
-const chartToken = CA || TEST_TOKEN
 const external = CA ? { target: '_blank', rel: 'noreferrer' } : {}
 
 const TOKENOMICS = [
@@ -239,7 +236,7 @@ const JSON_LD = JSON.stringify({
       name: 'PUTIN PUMP',
       url: `${SITE}/`,
       logo: `${SITE}/icon-192.png`,
-      sameAs: [LINKS.telegram, LINKS.telegramChat],
+      sameAs: [pumpUrl, LINKS.telegram, LINKS.telegramChat],
     },
     {
       '@type': 'FAQPage',
@@ -297,7 +294,7 @@ export default function App() {
             <span className="chip chip-b">Mint revoked</span>
             <span className="chip chip-c">1B supply</span>
           </div>
-          {chartToken && <PriceCard token={chartToken} />}
+          {CA && <PriceCard token={CA} />}
         </header>
 
         <Marquee text="$PUTINPUMP" />
@@ -333,12 +330,10 @@ export default function App() {
 
         <section className="chart" id="chart">
           <h2>Live market</h2>
-          {chartToken ? (
+          {CA ? (
             <>
-              {!CA && <p className="chart-test">Test mode: showing another token until the contract address is set.</p>}
-              <MarketStats token={chartToken} />
-              <Chart token={chartToken} />
-              {/* always the real CA on Jupiter, never the test token */}
+              <MarketStats token={CA} />
+              <Chart token={CA} />
               <div className="cta-row trade-row">
                 <a className="btn btn-green" href={buyUrl} {...external}>Buy</a>
                 <a className="btn btn-red" href={sellUrl} {...external}>Sell</a>

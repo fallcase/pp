@@ -36,18 +36,31 @@ function getJson(url: string) {
   return json
 }
 
+type Pair = { chainId: string; pairAddress: string; liquidity?: { usd?: number } }
+
+// GeckoTerminal's token -> pools index lags a freshly launched pump.fun token by hours, so the pair is
+// discovered on DexScreener (CORS open, lists the bonding curve from the first trade) and read by address.
+function findPair(token: string) {
+  return getJson(`https://api.dexscreener.com/latest/dex/tokens/${token}`).then((json) => {
+    const pairs: Pair[] = (json.pairs ?? []).filter((p: Pair) => p.chainId === 'solana')
+    if (!pairs.length) throw new Error('no pairs')
+    // after graduation the token also trades on an AMM pool: take the deepest one
+    return pairs.sort((a, b) => (b.liquidity?.usd ?? 0) - (a.liquidity?.usd ?? 0))[0].pairAddress
+  })
+}
+
 // token mint -> its most liquid pool. Shared by every component on the page.
 // ponytail: pool stats are fetched once per page load; poll here if the stat tiles must tick live.
 const pools = new Map<string, Promise<Pool>>()
 function loadPool(token: string) {
   let pool = pools.get(token)
   if (!pool) {
-    pool = getJson(`${API}/tokens/${token}/pools?page=1`).then((json) => {
-      const a = json.data?.[0]?.attributes
-      if (!a) throw new Error('no pools')
+    pool = findPair(token).then(async (address) => {
+      const a = (await getJson(`${API}/pools/${address}`)).data?.attributes
+      if (!a) throw new Error('no pool')
       return {
         address: a.address,
-        // always branded, even while TEST_TOKEN feeds the data; keep the pool's quote side (SOL, USDC…)
+        // keep the pool's quote side (SOL, USDC…) but always our own ticker
         name: `PUTINPUMP / ${String(a.name).split(' / ')[1] ?? 'SOL'}`,
         price: Number(a.base_token_price_usd),
         change24h: Number(a.price_change_percentage?.h24 ?? 0),
